@@ -4,8 +4,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -14,8 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                                         News news = new News(
                                                 newsJsonObject.getString("title"),
                                                 newsJsonObject.getString("content"),
+                                                newsJsonObject.getJSONObject("source").getString("name"),
                                                 newsJsonObject.getString("url"),
                                                 newsJsonObject.getString("image")
                                         );

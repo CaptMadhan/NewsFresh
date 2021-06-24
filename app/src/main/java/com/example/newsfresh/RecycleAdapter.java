@@ -1,21 +1,18 @@
 package com.example.newsfresh;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 class  RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder>
@@ -43,8 +40,9 @@ class  RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder>
         News currentItem = items.get(position);
         holder.title.setText(currentItem.title);
         holder.content.setText(currentItem.content);
+        holder.source.setText(currentItem.source);
         Glide.with(holder.itemView.getContext()).load(currentItem.imageUrl).into(holder.newsImg);
-        holder.title.setOnClickListener(v ->Toast.makeText(context,"Clicked on "+ items.get(position),Toast.LENGTH_SHORT).show()); //NewsItemClicked(currentItem));
+        holder.title.setOnClickListener(v -> NewsItemClicked(currentItem));
 
     }
     @Override
@@ -60,20 +58,25 @@ class  RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder>
     }
 
     private void NewsItemClicked( News item) {
-
+        int colorInt = Color.parseColor("#FF0000"); //red
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(colorInt);
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(context, Uri.parse(item.url));
     }
 
 
     // Fetch the custom view created
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
-        TextView content;
+        TextView content,source;
         ImageView newsImg;
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             newsImg = itemView.findViewById(R.id.image);
             content = itemView.findViewById(R.id.content);
+            source = itemView.findViewById(R.id.source);
 
         }
     }
