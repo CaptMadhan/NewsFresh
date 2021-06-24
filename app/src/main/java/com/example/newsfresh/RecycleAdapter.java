@@ -4,24 +4,28 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import org.jetbrains.annotations.NotNull;
 
-class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder>
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+class  RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder>
 {
-    String[] data;
+    ArrayList<News> items = new ArrayList<>();
     Context context;
 
-    public RecycleAdapter(String[] data, Context context) {
-        this.data = data;
+    RecycleAdapter(Context context){
         this.context = context;
     }
-
     @NonNull
     @NotNull
     @Override
@@ -36,23 +40,41 @@ class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder>
     //Bind the data to the views i.e serve the data to the views
     public void onBindViewHolder(@NonNull @NotNull RecycleAdapter.ViewHolder holder, int position) {
 
-        holder.text.setText(data[position]);
-        holder.text.setOnClickListener(v -> Toast.makeText(context,"Clicked on "+ data[position],Toast.LENGTH_SHORT).show());
+        News currentItem = items.get(position);
+        holder.title.setText(currentItem.title);
+        holder.content.setText(currentItem.content);
+        Glide.with(holder.itemView.getContext()).load(currentItem.imageUrl).into(holder.newsImg);
+        holder.title.setOnClickListener(v ->Toast.makeText(context,"Clicked on "+ items.get(position),Toast.LENGTH_SHORT).show()); //NewsItemClicked(currentItem));
 
     }
-
     @Override
     // for number of views
     public int getItemCount() {
 
-        return data.length;
+        return items.size();
     }
+    void updateNews(ArrayList<News> updatedNews){
+        items.clear();
+        items.addAll(updatedNews);
+        notifyDataSetChanged(); // This will call all the 3 functions again with the updated items
+    }
+
+    private void NewsItemClicked( News item) {
+
+    }
+
+
     // Fetch the custom view created
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text;
+        TextView title;
+        TextView content;
+        ImageView newsImg;
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
-            text = itemView.findViewById(R.id.TextDisplayed);
+            title = itemView.findViewById(R.id.title);
+            newsImg = itemView.findViewById(R.id.image);
+            content = itemView.findViewById(R.id.content);
+
         }
     }
 }
